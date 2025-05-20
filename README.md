@@ -34,11 +34,7 @@ Desenvolver uma solução automatizada para:
 
 4. **Registro de Pedidos**
 
-   * Logging de pedidos em um arquivo CSV com detalhes: data, hora, produto, valor, usuário (vulgo).
-
-5. **Notificações**
-
-   * Mensagem de confirmação no Telegram após validação do pagamento.
+   * Logging de pedidos em um arquivo CSV com detalhes: data, hora, produto, valor, usuário.
 
 ---
 
@@ -93,25 +89,5 @@ Desenvolver uma solução automatizada para:
 
 ---
 
-### 📈 Roadmap
-
-* [ ] Painel web para administração de produtos e pedidos.
-* [ ] Integração automática de confirmação de Pix via Webhook.
-* [ ] Multi-idiomas para expandir a base de clientes.
-* [ ] Relatórios e gráficos de vendas diários e semanais.
-
----
-
-### 🤝 Contribuição
-
-Contribuições são bem-vindas! Siga os passos:
-
-1. Fork este repositório.
-2. Crie uma branch com a sua feature: `git checkout -b minha-feature`
-3. Commit suas alterações: `git commit -m 'Adiciona nova feature'`
-4. Push para a branch: `git push origin minha-feature`
-5. Abra um Pull Request.
-
----
 
 Obrigado por utilizar o Bot de Vendas Anônimo no Telegram! Qualquer dúvida ou sugestão, abra uma issue.

@@ -12,9 +12,12 @@ ACCESS_TOKEN = 'APP_USR-7514101082488981-082921-2d88735b8909c11e425f5857451ae1dd
 
 # Produtos disponíveis
 sabores = {
-    'Chocolate': {'1kg': 80, '5kg': 180},
-    'Morango': {'1kg': 25, '5kg': 100, '10kg': 180, '25kg': 400},
-    'Baunilha': {'1kg': 35, '5kg': 140}
+    'Bolo de Fuba': {'250g': 6.20, '500g': 10, '1kg': 18},
+    'Bolo Formigueiro': {'250g': 7.50, '500g': 12, '1kg': 20},
+    'Bolo de Cenoura': {'250g': 4.00, '500g': 7, '1kg': 12},
+    'Bolo de Coco com fuba': {'250g': 7.20, '500g': 12, '1kg': 22},
+    'Bolo de Limao': {'250g': 6, '500g': 9, '1kg': 15},
+    'Torta de Morango': {'250g': 15, '500g': 27, '1kg': 50}
 }
 
 # Arquivos de saída
@@ -102,7 +105,7 @@ async def receber_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['esperando_nome'] = False
         context.user_data['esperando_horario'] = True
 
-        botoes = [[InlineKeyboardButton(f"{h}:00", callback_data=f'horario_{h}')] for h in range(18, 23)]
+        botoes = [[InlineKeyboardButton(f"{h}:00", callback_data=f'horario_{h}')] for h in range(9, 17)]
         await update.message.reply_text("⏰ Escolha o horário de retirada:", reply_markup=InlineKeyboardMarkup(botoes))
 
 # Horário e finalização

@@ -1,0 +1,18 @@
+
+---
+ID: 5924720753
+Nome: G.
+Retirada: 20:00
+Produto: Morango - 5kg - R$100
+
+---
+ID: 1120129402
+Nome: Renato
+Retirada: 18:00
+Produto: Morango - 5kg - R$100
+
+---
+ID: 7841433927
+Nome: p
+Retirada: 22:00
+Produto: Chocolate - 1kg - R$80

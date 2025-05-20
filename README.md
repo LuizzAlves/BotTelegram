@@ -114,18 +114,4 @@ Contribuições são bem-vindas! Siga os passos:
 
 ---
 
-### 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
-
----
-
-### 📬 Contato
-
-* **Autor**: Luiz Felipe
-* **Email**: [seu.email@exemplo.com](mailto:seu.email@exemplo.com)
-* **Telegram**: @seu\_vulgo
-
----
-
 Obrigado por utilizar o Bot de Vendas Anônimo no Telegram! Qualquer dúvida ou sugestão, abra uma issue.

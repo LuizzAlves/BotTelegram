@@ -20,25 +20,20 @@ sabores = {
     'Torta de Morango': {'250g': 15, '500g': 27, '1kg': 50}
 }
 
-# Arquivos de saída
 CSV_PATH = "pedidos.csv"
 TXT_PATH = "pedidos.txt"
 
-# Criação inicial do CSV
 if not os.path.exists(CSV_PATH):
     with open(CSV_PATH, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["UserID", "Nome", "Horário", "Sabor", "Quantidade", "Valor"])
 
-# Dados temporários
 user_data = {}
 
-# /start → Menu principal
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton(sabor, callback_data=f'sabor_{sabor}')] for sabor in sabores]
     await update.message.reply_text("🍰 Escolha o sabor do bolo:", reply_markup=InlineKeyboardMarkup(keyboard))
 
-# Botões de seleção
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -92,10 +87,34 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_photo(chat_id=uid, photo=qr_img)
 
     elif data == 'paguei':
-        await query.edit_message_text("✅ Pagamento confirmado!\nAgora, envie seu *nome* (apelido ou identificador):", parse_mode="Markdown")
-        context.user_data['esperando_nome'] = True
+        await query.edit_message_text("🔎 Verificando pagamento, aguarde...")
 
-# Recebe nome
+        try:
+            pagamentos = requests.get(
+                "https://api.mercadopago.com/v1/payments/search",
+                headers={"Authorization": f"Bearer {ACCESS_TOKEN}"},
+                params={"sort": "date_created", "criteria": "desc", "limit": 10}
+            ).json()
+
+            pago = False
+            if 'results' in pagamentos:
+                for pagamento in pagamentos['results']:
+                    if (
+                        pagamento["status"] == "approved" and
+                        pagamento["transaction_amount"] == user_data[uid]['valor'] and
+                        user_data[uid]['sabor'] in pagamento["description"]
+                    ):
+                        pago = True
+                        break
+
+            if pago:
+                await query.edit_message_text("✅ Pagamento confirmado!\nAgora, envie seu *nome* (apelido ou identificador):", parse_mode="Markdown")
+                context.user_data['esperando_nome'] = True
+            else:
+                await query.edit_message_text("🚫 Pagamento *não localizado* ainda.\nAguarde 1 minutinho e clique novamente em 'Já paguei'.", parse_mode="Markdown")
+        except Exception as e:
+            await query.edit_message_text(f"❌ Erro ao verificar pagamento.\n{e}")
+
 async def receber_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.message.from_user.id
     texto = update.message.text
@@ -108,7 +127,6 @@ async def receber_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         botoes = [[InlineKeyboardButton(f"{h}:00", callback_data=f'horario_{h}')] for h in range(9, 17)]
         await update.message.reply_text("⏰ Escolha o horário de retirada:", reply_markup=InlineKeyboardMarkup(botoes))
 
-# Horário e finalização
 async def horario(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -129,16 +147,13 @@ async def horario(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await query.edit_message_text(resumo, parse_mode="Markdown")
 
-        # CSV
         with open(CSV_PATH, mode="a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow([uid, dados['nome'], dados['horario'], dados['sabor'], dados['quantidade'], dados['valor']])
 
-        # TXT
         with open(TXT_PATH, mode="a", encoding="utf-8") as f:
             f.write(f"\n---\nID: {uid}\nNome: {dados['nome']}\nRetirada: {dados['horario']}\nProduto: {dados['sabor']} - {dados['quantidade']} - R${dados['valor']}\n")
 
-# Inicialização
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
